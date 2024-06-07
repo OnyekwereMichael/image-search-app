@@ -9,16 +9,21 @@ const form_search = document.getElementById("form_search");
 let page = 1;
 async function searchImages() {
   const searchInputValue = searchInput.value;
+  searchInputValue
   const url = `https://api.unsplash.com/search/photos?page=${page}&query=${searchInputValue}&client_id=${accessKey}`;
 
   const response = await fetch(url);
   const data = await response.json();
 
   const result = data.results;
-  console.log(result);
+
 
   if (page === 1) {
     searchResults.innerHTML = "";
+  }
+
+  if(page >= 1){
+    showMore.style.display = "block"
   }
 
   result.map((item) => {
@@ -26,13 +31,13 @@ async function searchImages() {
     search.classList.add("search-Result");
     const image = document.createElement("img");
     image.src = item.urls.small;
+    image.alt = item.alt_description
     const imageLink = document.createElement("a");
     imageLink.href = item.links.html;
     imageLink.target = "_blank";
     imageLink.innerHTML = item.alt_description;
     search.appendChild(image);
     search.appendChild(imageLink);
-    console.log(search);
     searchResults.appendChild(search);
   });
 }
@@ -45,8 +50,8 @@ form.addEventListener("submit", (event) => {
 });
 
 showMore.addEventListener("click", () => {
-  searchImages();
   page++;
+  searchImages();
 });
 
 // toggle dark and light
